@@ -4,25 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
+    <div class="container">
         <h1>Weather Dashboard</h1>
-        <div class="search-section">
-            <input type="text" id="city-input" placeholder="Enter city name" />
-            <button id="search-btn">Search</button>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="searchButton">Search</button>
+        <div id="weatherInfo">
+            <h2 id="cityName"></h2>
+            <img id="weatherIcon" src="" alt="Weather Icon">
+            <p id="temperature"></p>
+            <p id="humidity"></p>
+            <p id="description"></p>
+            <p id="errorMessage" class="error"></p>
         </div>
-        <div id="weather-info" class="weather-info hidden">
-            <h2 id="city-name"></h2>
-            <p id="weather-description"></p>
-            <p><span id="temperature"></span>°C</p>
-            <p>Humidity: <span id="humidity"></span>%</p>
-            <img id="weather-icon" alt="Weather Icon" />
-        </div>
-        <div id="error-message" class="error-message hidden"></div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
