@@ -1,45 +1,61 @@
-const cityInput = document.getElementById('cityInput');
-const searchButton = document.getElementById('searchButton');
-const weatherDetails = document.getElementById('weather-details');
+const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+const searchBtn = document.getElementById('search-btn');
+const cityInput = document.getElementById('city-input');
+const weatherInfo = document.getElementById('weather-info');
+const errorMessage = document.getElementById('error-message');
 
-const apiKey = 'YOUR_OPENWEATHERMAP_API_KEY'; // Replace with your API key
+searchBtn.addEventListener('click', fetchWeather);
 
-searchButton.addEventListener('click', () => {
-    const cityName = cityInput.value;
-    if (cityName) {
-        getWeatherData(cityName);
+async function fetchWeather() {
+    const cityName = cityInput.value.trim();
+    
+    if (!cityName) {
+        showError('Please enter a city name.');
+        return;
     }
-});
-
-async function getWeatherData(cityName) {
-    const url = https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric;
 
     try {
-        const response = await fetch(url);
-        const data = await response.json();
+        const response = await fetch(
+            https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric
+        );
 
-        if (response.ok) {
-            displayWeatherData(data);
-        } else {
-            weatherDetails.innerHTML = <p>Error: ${data.message}</p>;
-        }
+        if (!response.ok) throw new Error('City not found.');
+
+        const data = await response.json();
+        displayWeather(data);
+        hideError();
     } catch (error) {
-        weatherDetails.innerHTML = '<p>An error occurred. Please try again.</p>';
+        showError(error.message);
+        hideWeatherInfo();
     }
 }
 
-function displayWeatherData(data) {
+function displayWeather(data) {
     const { name, main, weather } = data;
-    const { temp, humidity } = main;
-    const description = weather[0].description;
-    const iconCode = weather[0].icon;
-    const iconUrl = http://openweathermap.org/img/w/${iconCode}.png;
 
-    weatherDetails.innerHTML = `
-        <h2>${name}</h2>
-        <img src="${iconUrl}" alt="${description}">
-        <p>Temperature: ${temp}°C</p>
-        <p>Humidity: ${humidity}%</p>
-        <p>Description: ${description}</p>
-    `;
+    document.getElementById('city-name').textContent = name;
+    document.getElementById('weather-description').textContent =
+        weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1);
+    document.getElementById('temperature').textContent = Math.round(main.temp);
+    document.getElementById('humidity').textContent = main.humidity;
+
+    const iconCode = weather[0].icon; // Example "01d"
+    document.getElementById(
+        'weather-icon'
+    ).src = https://openweathermap.org/img/wn/${iconCode}@2x.png;
+
+    weatherInfo.classList.remove('hidden');
+}
+
+function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.classList.remove('hidden');
+}
+
+function hideError() {
+    errorMessage.classList.add('hidden');
+}
+
+function hideWeatherInfo() {
+    weatherInfo.classList.add('hidden');
 }
