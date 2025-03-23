@@ -1,40 +1,59 @@
 body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: #333;
     margin: 0;
-    background-color: #f0f0f0;
+    padding: 0;
 }
 
-.container {
-    background-color: white;
+.app-container {
+    max-width: 500px;
+    margin: 50px auto;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
     text-align: center;
 }
 
-.search-container {
-    margin-bottom: 20px;
+.search-section {
+    display: flex;
+    justify-content: space-between;
 }
 
-#cityInput {
-    padding: 8px;
+input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
     border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
-#searchButton {
-    padding: 8px 16px;
+button {
+    padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-#weather-details {
+button:hover {
+    background-color: #0056b3;
+}
+
+.weather-info {
     margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.error-message {
+    margin-top: 20px;
+    color: red;
 }
