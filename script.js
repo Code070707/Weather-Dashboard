@@ -1,61 +1,55 @@
+const cityInput = document.getElementById('cityInput');
+const searchButton = document.getElementById('searchButton');
+const cityName = document.getElementById('cityName');
+const temperature = document.getElementById('temperature');
+const humidity = document.getElementById('humidity');
+const description = document.getElementById('description');
+const weatherIcon = document.getElementById('weatherIcon');
+const errorMessage = document.getElementById('errorMessage');
+
 const apiKey = '02f029f64a6dd97d1a395a50163fd9b4'; // Replace with your OpenWeatherMap API key
-const searchBtn = document.getElementById('search-btn');
-const cityInput = document.getElementById('city-input');
-const weatherInfo = document.getElementById('weather-info');
-const errorMessage = document.getElementById('error-message');
 
-searchBtn.addEventListener('click', fetchWeather);
-
-async function fetchWeather() {
-    const cityName = cityInput.value.trim();
-    
-    if (!cityName) {
-        showError('Please enter a city name.');
-        return;
+searchButton.addEventListener('click', () => {
+    const city = cityInput.value;
+    if (city) {
+        getWeatherData(city);
+    } else {
+        errorMessage.textContent = "Please enter a city name.";
+        clearWeatherInfo();
     }
+});
 
+async function getWeatherData(city) {
     try {
-        const response = await fetch(
-            https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric
-        );
-
-        if (!response.ok) throw new Error('City not found.');
-
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
         const data = await response.json();
-        displayWeather(data);
-        hideError();
+
+        if (data.cod === '404') {
+            errorMessage.textContent = "City not found.";
+            clearWeatherInfo();
+        } else {
+            errorMessage.textContent = "";
+            cityName.textContent = data.name;
+            temperature.textContent = `Temperature: ${data.main.temp}°C`;
+            humidity.textContent = `Humidity: ${data.main.humidity}%`;
+            description.textContent = data.weather[0].description;
+
+            const iconCode = data.weather[0].icon;
+            weatherIcon.src = `http://openweathermap.org/img/w/${iconCode}.png`;
+            weatherIcon.alt = data.weather[0].description;
+        }
     } catch (error) {
-        showError(error.message);
-        hideWeatherInfo();
+        console.error('Error fetching weather data:', error);
+        errorMessage.textContent = "An error occurred while fetching weather data.";
+        clearWeatherInfo();
     }
 }
 
-function displayWeather(data) {
-    const { name, main, weather } = data;
-
-    document.getElementById('city-name').textContent = name;
-    document.getElementById('weather-description').textContent =
-        weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1);
-    document.getElementById('temperature').textContent = Math.round(main.temp);
-    document.getElementById('humidity').textContent = main.humidity;
-
-    const iconCode = weather[0].icon; // Example "01d"
-    document.getElementById(
-        'weather-icon'
-    ).src = https://openweathermap.org/img/wn/${iconCode}@2x.png;
-
-    weatherInfo.classList.remove('hidden');
-}
-
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.classList.remove('hidden');
-}
-
-function hideError() {
-    errorMessage.classList.add('hidden');
-}
-
-function hideWeatherInfo() {
-    weatherInfo.classList.add('hidden');
+function clearWeatherInfo() {
+    cityName.textContent = "";
+    temperature.textContent = "";
+    humidity.textContent = "";
+    description.textContent = "";
+    weatherIcon.src = "";
+    weatherIcon.alt = "";
 }
